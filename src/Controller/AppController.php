@@ -17,9 +17,6 @@ class AppController extends Controller
 
         $this->loadComponent('Auth', [
             'authenticate' => [
-                'all' => [
-                    'finder' => 'auth'
-                ],
                 'ADmad/JwtAuth.Jwt' => [
                     'fields' => ['username' => 'id'],
                     'parameter' => 'jwt',

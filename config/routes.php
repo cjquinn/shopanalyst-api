@@ -75,22 +75,22 @@ Router::scope('/', function (RouteBuilder $routes) {
         /**
          * Users
          */
+        $routes->connect('/login', [
+            'controller' => 'Users',
+            'action' => 'login',
+            '_method' => 'POST'
+        ]);
+
         $routes->connect('/request-password-reset', [
             'controller' => 'Users',
             'action' => 'requestPasswordReset',
-            '_method' => 'PATCH'
+            '_method' => 'POST'
         ]);
 
         $routes->connect('/reset-password', [
             'controller' => 'Users',
             'action' => 'resetPassword',
             '_method' => ['GET', 'PATCH']
-        ]);
-
-        $routes->connect('/login', [
-            'controller' => 'Users',
-            'action' => 'login',
-            '_method' => 'POST'
         ]);
     });
 });

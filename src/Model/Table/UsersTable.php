@@ -12,8 +12,11 @@ use Cake\I18n\Time;
 use Cake\Mailer\MailerAwareTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Security;
 use Cake\Utility\Text;
 use Cake\Validation\Validator;
+
+use Firebase\JWT\JWT;
 
 class UsersTable extends Table
 {
@@ -183,13 +186,25 @@ class UsersTable extends Table
     /**
      * @param string|null $token
      * @return bool|\App\Model\Entity\User
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function getByToken($token)
     {
         $user = $this
             ->findByToken($token)
-            ->first();
+            ->firstOrFail();
 
         return $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function generateJwt($id)
+    {
+        return JWT::encode([
+            'sub' => $id,
+            'exp' =>  time() + 604800
+        ], Security::salt());
     }
 }

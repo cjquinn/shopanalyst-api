@@ -1,4 +1,4 @@
-.PHONY: bash cake composer deploy down install migrate pull test up
+.PHONY: bash cake composer deploy down install migrate pull test test-group up
 
 MAKEPATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 PWD := $(dir $(MAKEPATH))
@@ -54,6 +54,14 @@ test:
 		--network=$(PROJECT)_network \
 		wearelighthouse/php-fpm:latest \
 		vendor/bin/phpunit
+
+test-group:
+	docker run -it --rm \
+		-v $(PWD):/opt \
+		-w /opt \
+		--network=$(PROJECT)_network \
+		wearelighthouse/php-fpm:latest \
+		vendor/bin/phpunit --group testing
 
 up:
 	docker-compose up -d

@@ -19,15 +19,10 @@ trait ControllerTestTrait
      */
     private function _testUnauthorised($routes)
     {
+        $this->_setAjaxRequest();
+
         foreach ($routes as $method => $path) {
-            $this->enableCsrfToken();
             $this->{$method}($path);
-
-            $redirect = ['_name' => 'login'];
-
-            if ($method === 'get') {
-                $redirect['?'] = ['redirect' => $path];
-            }
 
             $this->assertResponseCode(403);
         }
@@ -36,12 +31,12 @@ trait ControllerTestTrait
     /**
      * @return void
      */
-    private function _testInvalidOwner($routes)
+    private function _testAuthorised($routes)
     {
         $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
 
         foreach ($routes as $method => $path) {
-            $this->enableCsrfToken();
             $this->{$method}($path);
 
             $this->assertResponseCode(403);
@@ -72,11 +67,11 @@ trait ControllerTestTrait
     {
         $_ENV['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
 
-        $this->configRequest([
-            'headers' => [
-                'Accept' => 'application/json'
-            ]
-        ]);
+        if (!isset($this->_request['headers'])) {
+            $this->_request['headers'] = [];
+        }
+
+        $this->_request['headers']['Accept'] = 'application/json';
     }
 
     /**

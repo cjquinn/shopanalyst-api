@@ -19,13 +19,10 @@ class UserMailer extends Mailer
             ->subject('Reset Password')
             ->from(Configure::read('Shopanalyst.EmailAddresses.support'))
             ->set([
-                'url' => [
-                    'controller' => 'Users',
-                    'action' => 'resetPassword',
-                    '?' => ['token' => $user->token],
-                    '_full' => true,
-                    'prefix' => false
-                ]
+                'url' => sprintf(
+                    'https://myshopanalyst.com/reset-password?token=%s',
+                    $user->token
+                )
             ])
             ->template('resetPassword')
             ->emailFormat('both');
