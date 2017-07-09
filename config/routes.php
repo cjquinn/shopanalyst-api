@@ -75,6 +75,12 @@ Router::scope('/', function (RouteBuilder $routes) {
         /**
          * Users
          */
+        $routes->connect('/current-user', [
+            'controller' => 'Users',
+            'action' => 'currentUser',
+            '_method' => 'GET'
+        ]);
+
         $routes->connect('/login', [
             'controller' => 'Users',
             'action' => 'login',

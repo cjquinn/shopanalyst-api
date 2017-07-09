@@ -3,6 +3,9 @@
 namespace App\Test\TestCase\Controller;
 
 use Cake\TestSuite\IntegrationTestCase;
+use Cake\Utility\Security;
+
+use Firebase\JWT\JWT;
 
 class UsersControllerTest extends IntegrationTestCase
 {
@@ -13,7 +16,10 @@ class UsersControllerTest extends IntegrationTestCase
      */
     public function testUnauthorised()
     {
-        $this->_testUnauthorised(['put' => '/users/account.json']);
+        $this->_testUnauthorised([
+            'get' => '/auth/current-user.json',
+            'put' => '/users/account.json'
+        ]);
     }
 
     /**
@@ -67,6 +73,18 @@ class UsersControllerTest extends IntegrationTestCase
             'email' => 'christyjquinn@gmail.com',
             'password' => 'password'
         ]);
+
+        $this->assertResponseCode(200);
+    }
+
+    /**
+     * @return void
+     */
+    public function testCurrentUserGet()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->get('/auth/current-user.json');
 
         $this->assertResponseCode(200);
     }

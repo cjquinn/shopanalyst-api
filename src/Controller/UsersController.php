@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Cake\Event\Event;
-use Cake\Network\Exception\ForbiddenException;
 
 class UsersController extends AppController
 {
@@ -53,14 +52,24 @@ class UsersController extends AppController
 
         if (!$this->Users->save($user)) {
             $this->response = $this->response->withStatus(400);
-        } else {
-            $this->set('jwt', $this->Users->generateJwt($user['id']));
+        }
+
+        if ($user->id) {
+            $this->set('jwt', $this->Users->generateJwt($user->id));
         }
 
         $this->set([
             'user' => $user,
             'errors' => $user->errors()
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function currentUser()
+    {
+        $this->set('user', $this->Auth->user());
     }
 
     /**
@@ -72,12 +81,10 @@ class UsersController extends AppController
         $user = $this->Auth->identify();
 
         if (!$user) {
-            if ($this->request->hasHeader('Authorization')) {
-                throw new ForbiddenException();
-            }
-
             $this->response = $this->response->withStatus(400);
-        } elseif (!$this->request->hasHeader('Authorization')) {
+        }
+
+        if ($user) {
             $this->set('jwt', $this->Users->generateJwt($user['id']));
         }
 
@@ -86,7 +93,6 @@ class UsersController extends AppController
 
     /**
      * @return void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function requestPasswordReset()
     {
@@ -96,7 +102,9 @@ class UsersController extends AppController
 
         if (!$user) {
             $this->response = $this->response->withStatus(400);
-        } else {
+        }
+
+        if ($user) {
             $this->Users->patchEntitySetToken($user);
 
             $this->Users->save($user);
@@ -105,16 +113,12 @@ class UsersController extends AppController
 
     /**
      * @return void
-     * @throws \Cake\Network\Exception\ForbiddenException|\Cake\Datasource\Exception\RecordNotFoundException
+     * @throws \Cake\Network\Exception\ForbiddenException|
+     *         \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function resetPassword()
     {
         $user = $this->Users->getByToken($this->request->getQuery('token'));
-
-
-        if (!$user->token_sent->wasWithinLast('1 Hour')) {
-            throw new ForbiddenException();
-        }
 
         $this->Users->patchEntityResetPassword($user, $this->request->getData());
 
