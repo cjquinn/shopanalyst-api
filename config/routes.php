@@ -35,15 +35,20 @@ Router::scope('/', function (RouteBuilder $routes) {
             $routes->resources('ListItems', [
                 'only' => ['delete', 'toggleComplete', 'updateQuantity'],
                 'map' => [
+                    'decreaseQuantity' => [
+                        'action' => 'decreaseQuantity',
+                        'method' => 'PATCH',
+                        'path' => '/:id/decrease-quantity'
+                    ],
+                    'increaseQuantity' => [
+                        'action' => 'increaseQuantity',
+                        'method' => 'PATCH',
+                        'path' => '/:id/increase-quantity'
+                    ],
                     'toggleComplete' => [
                         'action' => 'toggleComplete',
                         'method' => 'PATCH',
                         'path' => '/:id/toggle-complete'
-                    ],
-                    'updateQuantity' => [
-                        'action' => 'updateQuantity',
-                        'method' => 'PATCH',
-                        'path' => '/:id/update-quantity'
                     ]
                 ]
             ]);
