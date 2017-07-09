@@ -65,18 +65,19 @@ class UsersController extends AppController
 
     /**
      * @return void
+     * @throws \Cake\Network\Exception\ForbiddenException
      */
     public function login()
     {
         $user = $this->Auth->identify();
 
         if (!$user) {
-            if ($this->request->hasHeader('authorization')) {
+            if ($this->request->hasHeader('Authorization')) {
                 throw new ForbiddenException();
             }
 
             $this->response = $this->response->withStatus(400);
-        } elseif (!$this->request->hasHeader('authorization')) {
+        } elseif (!$this->request->hasHeader('Authorization')) {
             $this->set('jwt', $this->Users->generateJwt($user['id']));
         }
 
@@ -104,7 +105,7 @@ class UsersController extends AppController
 
     /**
      * @return void
-     * @throws \Cake\Network\Exception\ForbiddenException
+     * @throws \Cake\Network\Exception\ForbiddenException|\Cake\Datasource\Exception\RecordNotFoundException
      */
     public function resetPassword()
     {
