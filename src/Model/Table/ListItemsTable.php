@@ -2,6 +2,10 @@
 
 namespace App\Model\Table;
 
+use ArrayObject;
+
+use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -57,5 +61,13 @@ class ListItemsTable extends Table
         $rules->add($rules->isUnique(['item_id', 'list_id']));
 
         return $rules;
+    }
+
+    /**
+     * @return void
+     */
+    public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
+    {
+        $query->orderAsc($this->aliasField('created'));
     }
 }

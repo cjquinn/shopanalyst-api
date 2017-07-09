@@ -67,7 +67,7 @@ class ListsControllerTest extends IntegrationTestCase
     {
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
-        $this->post('/lists/1/add-items.json');
+        $this->patch('/lists/1/add-items.json');
 
         $this->assertResponseCode(400);
     }
@@ -79,7 +79,7 @@ class ListsControllerTest extends IntegrationTestCase
     {
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
-        $this->post('/lists/1/add-items.json', [
+        $this->patch('/lists/1/add-items.json', [
             'list_items' => [
                 ['item_id' => 1],
                 ['item' => 'Potatos']

@@ -1,6 +1,10 @@
 <?php
 namespace App\Model\Table;
 
+use ArrayObject;
+
+use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -45,5 +49,13 @@ class ListsTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
+    }
+
+    /**
+     * @return void
+     */
+    public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
+    {
+        $query->orderAsc($this->aliasField('created'));
     }
 }
