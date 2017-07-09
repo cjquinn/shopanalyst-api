@@ -33,7 +33,13 @@ Router::scope('/', function (RouteBuilder $routes) {
              * ListItems
              */
             $routes->resources('ListItems', [
-                'only' => ['delete', 'toggleComplete', 'updateQuantity'],
+                'inflect' => 'dasherize',
+                'only' => [
+                    'decreaseQuantity',
+                    'delete',
+                    'increaseQuantity',
+                    'toggleComplete'
+                ],
                 'map' => [
                     'decreaseQuantity' => [
                         'action' => 'decreaseQuantity',

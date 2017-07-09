@@ -3,9 +3,6 @@
 namespace App\Test\TestCase\Controller;
 
 use Cake\TestSuite\IntegrationTestCase;
-use Cake\Utility\Security;
-
-use Firebase\JWT\JWT;
 
 class UsersControllerTest extends IntegrationTestCase
 {
