@@ -11,7 +11,24 @@ class ListsFixture extends TestFixture
 
     public function init()
     {
-        $this->records = [];
+        $this->records = [
+            [
+                'id' => 1,
+                'user_id' => 1,
+                'name' => 'Christy\'s List',
+                'is_deleted' => false,
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s')
+            ],
+            [
+                'id' => 2,
+                'user_id' => 2,
+                'name' => 'Lisa\'s List',
+                'is_deleted' => false,
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s')
+            ]
+        ];
 
         parent::init();
     }

@@ -36,6 +36,8 @@ class ListsController extends AppController
 
         $this->Lists->patchEntity($list, $this->request->getData());
 
+        $list->set('user_id', $this->Auth->user('id'));
+
         if (!$this->Lists->save($list)) {
             $this->response = $this->response->withStatus(400);
         }
@@ -54,7 +56,11 @@ class ListsController extends AppController
     {
         $list = $this->Lists->get($id);
 
-        $this->Lists->patchEntityAddItems($list, $this->request->getData());
+        $this->Lists->patchEntityAddListItems(
+            $list,
+            $this->request->getData(),
+            $this->Auth->user('id')
+        );
 
         if (!$this->Lists->save($list)) {
             $this->response = $this->response->withStatus(400);

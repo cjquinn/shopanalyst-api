@@ -15,8 +15,5 @@ class Item extends Entity
     /**
      * @var array
      */
-    protected $_accessible = [
-        'name' => true,
-        '*' => false
-    ];
+    protected $_accessible = ['*' => false];
 }

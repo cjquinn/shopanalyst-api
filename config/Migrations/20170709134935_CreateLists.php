@@ -32,6 +32,11 @@ class CreateLists extends AbstractMigration
             'unique' => true
         ]);
 
+        $table->addColumn('is_deleted', 'boolean', [
+            'default' => false,
+            'null' => false
+        ]);
+
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

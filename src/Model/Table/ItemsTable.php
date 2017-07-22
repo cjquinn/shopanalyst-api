@@ -52,4 +52,29 @@ class ItemsTable extends Table
     {
         $query->orderAsc($this->aliasField('name'));
     }
+
+    /**
+     * @return void
+     */
+    public function findFiltered(Query $query, array $options)
+    {
+        if (isset($options['search'])) {
+            $query->where([
+                'name LIKE' => '%' . $options['search'] . '%'
+            ]);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwnedBy($id, $userId)
+    {
+        return $this->exists([
+            'id' => $id,
+            'user_id' => $userId
+        ]);
+    }
 }

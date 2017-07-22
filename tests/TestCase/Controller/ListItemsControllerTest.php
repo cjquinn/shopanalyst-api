@@ -17,7 +17,7 @@ class ListItemsControllerTest extends IntegrationTestCase
             'delete' => '/lists/1/list-items/1.json',
             'patch' => '/lists/1/list-items/1/decrease-quantity.json',
             'patch' => '/lists/1/list-items/1/increase-quantity.json',
-            'patch' => '/lists/1/list-items/1/toggle-complete.json'
+            'patch' => '/lists/1/list-items/1/toggle-completed.json'
         ]);
     }
 
@@ -31,12 +31,12 @@ class ListItemsControllerTest extends IntegrationTestCase
             'delete' => '/lists/2/list-items/2.json',
             'patch' => '/lists/2/list-items/2/decrease-quantity.json',
             'patch' => '/lists/2/list-items/2/increase-quantity.json',
-            'patch' => '/lists/2/list-items/2/toggle-complete.json',
+            'patch' => '/lists/2/list-items/2/toggle-completed.json',
             // Invalid item
             'delete' => '/lists/1/list-items/2.json',
             'patch' => '/lists/1/list-items/2/decrease-quantity.json',
             'patch' => '/lists/1/list-items/2/increase-quantity.json',
-            'patch' => '/lists/1/list-items/2/toggle-complete.json'
+            'patch' => '/lists/1/list-items/2/toggle-completed.json'
         ]);
     }
 
@@ -79,11 +79,11 @@ class ListItemsControllerTest extends IntegrationTestCase
     /**
      * @return void
      */
-    public function testToggleCompletePatch()
+    public function testToggleCompletedPatch()
     {
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
-        $this->patch('/lists/1/list-items/1/toggle-complete.json');
+        $this->patch('/lists/1/list-items/1/toggle-completed.json');
 
         $this->assertResponseCode(200);
     }

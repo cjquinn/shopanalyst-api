@@ -81,8 +81,7 @@ class ListsControllerTest extends IntegrationTestCase
         $this->_setAjaxRequest();
         $this->patch('/lists/1/add-items.json', [
             'list_items' => [
-                ['item_id' => 1],
-                ['item' => 'Potatos']
+                ['item' => ['name' => 'Potatos']]
             ]
         ]);
 

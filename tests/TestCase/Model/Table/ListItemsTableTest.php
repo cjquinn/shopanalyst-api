@@ -16,7 +16,9 @@ class ListItemsTableTest extends TestCase
     /**
      * @var array
      */
-    public $fixtures = [];
+    public $fixtures = [
+        'app.list_items'
+    ];
 
     /**
      * @return void
@@ -36,5 +38,88 @@ class ListItemsTableTest extends TestCase
         unset($this->ListItems);
 
         parent::tearDown();
+    }
+
+    /**
+     * @return void
+     */
+    public function testValidationDefault()
+    {
+        $errors = $this->ListItems->validator()->errors([]);
+
+        $expected = [
+            'item' => [
+                '_required' => 'This field is required'
+            ],
+            'item_id' => [
+                '_required' => 'This field is required'
+            ]
+        ];
+
+        $this->assertEquals($errors, $expected);
+
+        $errors = $this->ListItems->validator()->errors([
+            'item_id' => 'One'
+        ]);
+
+        $expected = [
+            'item_id' => [
+                'integer' => 'The provided value is invalid'
+            ]
+        ];
+
+        $this->assertEquals($errors, $expected);
+
+        $errors = $this->ListItems->validator()->errors([
+            'item' => 'An item'
+        ]);
+
+        $expected = [
+            'item' => [
+                '_nested' => 'The provided value is invalid'
+            ]
+        ];
+
+        $this->assertEquals($errors, $expected);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateQuantity()
+    {
+        $listItem = $this->ListItems->get(1);
+
+        $this->assertEquals(1, $listItem->quantity);
+
+        $this->ListItems->updateQuantity($listItem, 1);
+
+        $this->assertEquals(2, $listItem->quantity);
+
+        $this->ListItems->updateQuantity($listItem, -1);
+
+        $this->assertEquals(1, $listItem->quantity);
+
+        $this->ListItems->updateQuantity($listItem, -1);
+
+        $this->assertEquals(1, $listItem->quantity);
+    }
+
+    /**
+     * @return void
+     */
+    public function testToggleCompleted()
+    {
+        $listItem = $this->ListItems->get(1);
+
+        $this->assertFalse($listItem->is_completed);
+
+        $this->ListItems->toggleCompleted($listItem);
+
+        $this->assertTrue($listItem->is_completed);
+
+        $this->ListItems->toggleCompleted($listItem);
+
+        $this->assertFalse($listItem->is_completed);
     }
 }

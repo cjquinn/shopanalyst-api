@@ -31,10 +31,28 @@ class ItemsTableTest extends TestCase
     /**
      * @return void
      */
-    public function tearDown()
+    public function testValidationDefault()
     {
-        unset($this->Items);
+        $errors = $this->Items->validator()->errors([]);
 
-        parent::tearDown();
+        $expected = [
+            'name' => [
+                '_required' => 'This field is required'
+            ]
+        ];
+
+        $this->assertEquals($errors, $expected);
+
+        $errors = $this->Items->validator()->errors([
+            'name' => ''
+        ]);
+
+        $expected = [
+            'name' => [
+                '_empty' => 'This field cannot be left empty'
+            ]
+        ];
+
+        $this->assertEquals($errors, $expected);
     }
 }

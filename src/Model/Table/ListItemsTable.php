@@ -2,6 +2,8 @@
 
 namespace App\Model\Table;
 
+use App\Model\Entity\ListItem;
+
 use ArrayObject;
 
 use Cake\Event\Event;
@@ -37,16 +39,15 @@ class ListItemsTable extends Table
     {
         $validator
             ->requirePresence('item', function ($context) {
-                return !isset($context['data']['list_id']);
+                return !isset($context['data']['item_id']);
             })
-            ->notEmpty('item');
+            ->addNested('item', $this->Items->validator());
 
         $validator
             ->requirePresence('item_id', function ($context) {
-                return !isset($context['data']['list']);
+                return !isset($context['data']['item']);
             })
-            ->integer('item_id')
-            ->notEmpty('item_id');
+            ->integer('item_id');
 
         return $validator;
     }
@@ -69,5 +70,39 @@ class ListItemsTable extends Table
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
         $query->orderAsc($this->aliasField('created'));
+    }
+
+    /**
+     * @return void
+     */
+    public function toggleCompleted(ListItem $listItem)
+    {
+        $listItem->set('is_completed', !$listItem->is_completed);
+
+        $this->save($listItem);
+    }
+
+    /**
+     * @return void
+     */
+    public function updateQuantity(ListItem $listItem, $difference)
+    {
+        $listItem->set(
+            'quantity',
+            max($listItem->quantity + $difference, 1)
+        );
+
+        $this->save($listItem);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwnedBy($id, $listId)
+    {
+        return $this->exists([
+            'id' => $id,
+            'list_id' => $listId
+        ]);
     }
 }

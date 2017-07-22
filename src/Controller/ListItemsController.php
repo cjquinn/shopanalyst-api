@@ -29,7 +29,7 @@ class ListItemsController extends AppController
     {
         $listItem = $this->ListItems->get($id);
 
-        $this->ListItems->decreaseQuantity($listItem);
+        $this->ListItems->updateQuantity($listItem, -1);
 
         $this->set('listItem', $listItem);
     }
@@ -55,7 +55,7 @@ class ListItemsController extends AppController
     {
         $listItem = $this->ListItems->get($id);
 
-        $this->ListItems->increaseQuantity($listItem);
+        $this->ListItems->updateQuantity($listItem, 1);
 
         $this->set('listItem', $listItem);
     }

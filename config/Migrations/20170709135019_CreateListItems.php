@@ -42,7 +42,7 @@ class CreateListItems extends AbstractMigration
             'null' => false
         ]);
 
-        $table->addColumn('is_complete', 'boolean', [
+        $table->addColumn('is_completed', 'boolean', [
             'default' => false,
             'null' => false
         ]);
