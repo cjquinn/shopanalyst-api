@@ -51,9 +51,6 @@ class UsersTableTest extends TestCase
         $this->Users->patchEntityAdd($user, $data);
 
         $expected = [
-            'name' => [
-                '_required' => 'This field is required'
-            ],
             'email' => [
                 '_required' => 'This field is required'
             ],
@@ -76,9 +73,6 @@ class UsersTableTest extends TestCase
         $this->Users->patchEntityEdit($user, $data);
 
         $expected = [
-            'name' => [
-                '_required' => 'This field is required'
-            ],
             'email' => [
                 '_required' => 'This field is required'
             ],
@@ -94,7 +88,6 @@ class UsersTableTest extends TestCase
 
         $user = $this->Users->get(1);
         $data = [
-            'name' => 'Christy',
             'email' => 'christy@myshopanalyst.com',
             'current_password' => 'password',
             'new_password' => ''
@@ -112,7 +105,6 @@ class UsersTableTest extends TestCase
 
         $user = $this->Users->get(1);
         $data = [
-            'name' => 'Christy',
             'email' => 'christy@myshopanalyst.com',
             'current_password' => '',
             'new_password' => 'newpassword'
@@ -130,7 +122,6 @@ class UsersTableTest extends TestCase
 
         $user = $this->Users->get(1);
         $data = [
-            'name' => 'Christy',
             'email' => 'christy@myshopanalyst.com',
             'current_password' => '',
             'new_password' => ''
@@ -142,7 +133,6 @@ class UsersTableTest extends TestCase
 
         $user = $this->Users->get(1);
         $data = [
-            'name' => 'Christy',
             'email' => 'christy@myshopanalyst.com',
             'current_password' => 'notmypassword',
             'new_password' => 'newpassword'
@@ -161,7 +151,6 @@ class UsersTableTest extends TestCase
 
         $user = $this->Users->get(1);
         $data = [
-            'name' => 'Christy',
             'email' => 'christy@myshopanalyst.com',
             'current_password' => 'password',
             'new_password' => 'newpassword'

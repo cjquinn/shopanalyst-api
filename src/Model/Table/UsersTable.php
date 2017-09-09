@@ -116,10 +116,6 @@ class UsersTable extends Table
     public function validationAdd(Validator $validator)
     {
         $validator
-            ->requirePresence('name')
-            ->notEmpty('name');
-
-        $validator
             ->requirePresence('email')
             ->notEmpty('email')
             ->email('email');
@@ -136,10 +132,6 @@ class UsersTable extends Table
      */
     public function validationEdit(Validator $validator)
     {
-        $validator
-            ->requirePresence('name')
-            ->notEmpty('name');
-
         $validator
             ->requirePresence('email')
             ->notEmpty('email')

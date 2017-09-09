@@ -39,7 +39,6 @@ class UsersControllerTest extends IntegrationTestCase
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
         $this->put('/users/account.json', [
-            'name' => 'Christy Quinn',
             'email' => 'christy@myshopanalyst.com',
             'current_password' => '',
             'new_password' => ''
@@ -66,7 +65,6 @@ class UsersControllerTest extends IntegrationTestCase
     {
         $this->_setAjaxRequest();
         $this->post('/users.json', [
-            'name' => 'Christy Quinn',
             'email' => 'christyjquinn@gmail.com',
             'password' => 'password'
         ]);
