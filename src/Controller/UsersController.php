@@ -85,10 +85,11 @@ class UsersController extends AppController
         }
 
         if ($user) {
-            $this->set('jwt', $this->Users->generateJwt($user['id']));
+            $this->set([
+                'jwt', $this->Users->generateJwt($user['id']),
+                'user' => $user
+            ]);
         }
-
-        $this->set('user', $user);
     }
 
     /**

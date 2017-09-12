@@ -134,6 +134,11 @@ Type::build('datetime')->useImmutable();
 Type::build('timestamp')->useImmutable();
 
 /**
+ * Plugins
+ */
+Plugin::load('ADmad/JwtAuth');
+
+/**
  * Custom config
  */
 Configure::write('Shopanalyst', [
