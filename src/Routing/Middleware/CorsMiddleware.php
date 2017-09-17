@@ -21,7 +21,7 @@ class CorsMiddleware
 
             if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
                 $response = $response
-                    ->withHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type')
+                    ->withHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Requested-With')
                     ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
 
                 return $response;

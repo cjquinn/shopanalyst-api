@@ -81,6 +81,12 @@ class UsersController extends AppController
         $user = $this->Auth->identify();
 
         if (!$user) {
+            $this->set('errors', [
+                '_error' => [
+                    'invalid' => 'Invalid email or password, please try again'
+                ]
+            ]);
+
             $this->response = $this->response->withStatus(400);
         }
 

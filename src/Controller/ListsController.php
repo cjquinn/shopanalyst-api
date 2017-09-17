@@ -4,7 +4,7 @@ namespace App\Controller;
 
 class ListsController extends AppController
 {
-    public $paginate = ['limit' => 10];
+    public $paginate = ['limit' => 5];
 
     public function initialize()
     {
@@ -110,11 +110,17 @@ class ListsController extends AppController
      */
     public function index()
     {
-        $lists = $this->Lists
-            ->findByUserId($this->Auth->user('id'))
-            ->find('populated');
+        $lists = $this->paginate(
+            $this->Lists
+                ->findByUserId($this->Auth->user('id'))
+                ->find('populated')
+        );
 
-        $this->set('lists', $this->paginate($lists));
+        $this->set([
+            'lists' => $lists,
+            'total' => $this->request->paging['Lists']['count'],
+            '_serialize' => ['lists', 'total']
+        ]);
     }
 
     /**
