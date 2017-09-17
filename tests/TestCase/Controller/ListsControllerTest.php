@@ -29,7 +29,6 @@ class ListsControllerTest extends IntegrationTestCase
     public function testAuthorised()
     {
         $this->_testAuthorised([
-            'get' => '/lists/2.json',
             'put' => '/lists/2.json',
             'delete' => '/lists/2.json',
             'patch' => '/lists/2/add-items.json'
@@ -134,6 +133,18 @@ class ListsControllerTest extends IntegrationTestCase
         $this->get('/lists.json');
 
         $this->assertResponseCode(200);
+    }
+
+    /**
+     * @return void
+     */
+    public function testViewInvalidUser()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->get('/lists/2.json');
+
+        $this->assertResponseCode(404);
     }
 
     /**
