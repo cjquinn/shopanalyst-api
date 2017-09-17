@@ -11,11 +11,10 @@ class AppExceptionRenderer extends ExceptionRenderer
      */
     public function render()
     {
-        $this->error->responseHeader([
-            'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Credentials' => 'true',
-            'Access-Control-Max-Age' => '86400'
-        ]);
+        $this->controller->response = $this->controller->response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Credentials', 'true')
+            ->withHeader('Access-Control-Max-Age', '86400');
 
         return parent::render();
     }

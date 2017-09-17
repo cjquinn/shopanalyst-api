@@ -19,6 +19,7 @@ class ListsController extends AppController
     public function isAuthorized(array $user)
     {
         if ($this->request->getParam('id') &&
+            $this->request->action !== 'view' &&
             !$this->Lists->isOwnedBy($this->request->getParam('id'), $this->Auth->user('id'))
         ) {
             return false;
@@ -129,7 +130,13 @@ class ListsController extends AppController
      */
     public function view($id)
     {
-        $list = $this->Lists->get($id, ['finder' => 'populated']);
+        $list = $this->Lists
+            ->find('populated')
+            ->where([
+                $this->Lists->aliasField('id') => $id,
+                $this->Lists->aliasField('user_id') => $this->Auth->user('id')
+            ])
+            ->firstOrFail();
 
         $this->set('list', $list);
     }
