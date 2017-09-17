@@ -22,4 +22,21 @@ class ListEntity extends Entity
         'name' => true,
         '*' => false
     ];
+
+    /**
+     * @var array
+     */
+    protected $_virtual = ['date'];
+
+    /**
+     * @return string
+     */
+    protected function _getDate()
+    {
+        if (!$this->created) {
+            return '';
+        }
+
+        return $this->created->format('dS M');
+    }
 }

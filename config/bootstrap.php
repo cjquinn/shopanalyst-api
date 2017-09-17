@@ -77,6 +77,11 @@ $isCli = PHP_SAPI === 'cli';
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
 } else {
+    Configure::write(
+        'Error.exceptionRenderer',
+        'App\Error\AppExceptionRenderer'
+    );
+
     (new ErrorHandler(Configure::read('Error')))->register();
 }
 

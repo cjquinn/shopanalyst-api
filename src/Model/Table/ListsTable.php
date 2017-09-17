@@ -127,7 +127,7 @@ class ListsTable extends Table
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
-        $query->orderAsc($this->aliasField('created'));
+        $query->orderDesc($this->aliasField('created'));
     }
 
     /**
