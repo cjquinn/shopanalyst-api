@@ -37,6 +37,6 @@ class ListEntity extends Entity
             return '';
         }
 
-        return $this->created->format('dS M');
+        return $this->created->format('jS M');
     }
 }
