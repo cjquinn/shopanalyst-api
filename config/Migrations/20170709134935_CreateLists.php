@@ -27,11 +27,6 @@ class CreateLists extends AbstractMigration
             'null' => false,
         ]);
 
-        $table->addIndex(['user_id', 'name'], [
-            'name' => 'idx_lists_user_id_name',
-            'unique' => true
-        ]);
-
         $table->addColumn('is_deleted', 'boolean', [
             'default' => false,
             'null' => false

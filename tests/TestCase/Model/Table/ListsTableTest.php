@@ -119,7 +119,6 @@ class ListsTableTest extends TestCase
 
     /**
      * @return void
-     * @group testing
      */
     public function testBeforeSave()
     {

@@ -37,7 +37,7 @@ class CreateListItems extends AbstractMigration
         ]);
 
         $table->addColumn('quantity', 'integer', [
-            'default' => 0,
+            'default' => 1,
             'limit' => 11,
             'null' => false
         ]);
