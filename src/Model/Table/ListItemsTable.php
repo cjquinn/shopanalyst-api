@@ -7,6 +7,7 @@ use App\Model\Entity\ListItem;
 use ArrayObject;
 
 use Cake\Event\Event;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -33,6 +34,17 @@ class ListItemsTable extends Table
     }
 
     /**
+     * @return void
+     */
+    public function patchEntityUpdateQuantity(ListItem $listItem, array $data)
+    {
+        $this->patchEntity($listItem, $data, [
+            'fieldList' => ['quantity'],
+            'validate' => 'updateQuantity'
+        ]);
+    }
+
+    /**
      * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator)
@@ -41,13 +53,28 @@ class ListItemsTable extends Table
             ->requirePresence('item', function ($context) {
                 return !isset($context['data']['item_id']);
             })
+            ->notEmpty('item')
             ->addNested('item', $this->Items->validator());
 
         $validator
             ->requirePresence('item_id', function ($context) {
                 return !isset($context['data']['item']);
             })
+            ->notEmpty('item_id')
             ->integer('item_id');
+
+        return $validator;
+    }
+
+    /**
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdateQuantity(Validator $validator)
+    {
+        $validator
+            ->requirePresence('quantity')
+            ->notEmpty('quantity')
+            ->naturalNumber('quantity');
 
         return $validator;
     }
@@ -67,9 +94,22 @@ class ListItemsTable extends Table
     /**
      * @return void
      */
+    public function beforeSave(Event $event, ListItem $listItem)
+    {
+        if (!$listItem->isDirty('completed')) {
+            $listItem->setDirty('modified', true);
+        }
+    }
+
+    /**
+     * @return void
+     */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
-        $query->orderAsc($this->aliasField('created'));
+        $query->order([
+            $this->aliasField('completed') => 'ASC',
+            $this->aliasField('modified') => 'DESC'
+        ]);
     }
 
     /**
@@ -77,7 +117,12 @@ class ListItemsTable extends Table
      */
     public function toggleCompleted(ListItem $listItem)
     {
-        $listItem->set('is_completed', !$listItem->is_completed);
+        $listItem->set(
+            'completed',
+            $listItem->completed
+                ? null
+                : Time::now()
+        );
 
         $this->save($listItem);
     }
@@ -85,7 +130,7 @@ class ListItemsTable extends Table
     /**
      * @return void
      */
-    public function updateQuantity(ListItem $listItem, $difference)
+    public function modifyQuantity(ListItem $listItem, $difference)
     {
         $listItem->set(
             'quantity',

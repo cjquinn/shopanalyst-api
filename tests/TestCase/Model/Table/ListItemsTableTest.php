@@ -45,6 +45,7 @@ class ListItemsTableTest extends TestCase
      */
     public function testValidationDefault()
     {
+        // Required
         $errors = $this->ListItems->validator()->errors([]);
 
         $expected = [
@@ -56,8 +57,22 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($errors, $expected);
+        $this->assertEquals($expected, $errors);
 
+        // Empty
+        $errors = $this->ListItems->validator()->errors([
+            'item_id' => ''
+        ]);
+
+        $expected = [
+            'item_id' => [
+                '_empty' => 'This field cannot be left empty'
+            ]
+        ];
+
+        $this->assertEquals($expected, $errors);
+
+        // Invalid
         $errors = $this->ListItems->validator()->errors([
             'item_id' => 'One'
         ]);
@@ -68,8 +83,9 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($errors, $expected);
+        $this->assertEquals($expected, $errors);
 
+        // Nested
         $errors = $this->ListItems->validator()->errors([
             'item' => 'An item'
         ]);
@@ -80,27 +96,106 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($errors, $expected);
+        $this->assertEquals($expected, $errors);
     }
 
     /**
      * @return void
      */
-    public function testUpdateQuantity()
+    public function testValidationUpdateQuantity()
+    {
+        // Required
+        $listItem = $this->ListItems->get(1);
+        $data = [];
+
+        $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
+
+        $expected = [
+            'quantity' => [
+                '_required' => 'This field is required'
+            ]
+        ];
+
+        $this->assertEquals($expected, $listItem->getErrors());
+
+        // Empty
+        $listItem = $this->ListItems->get(1);
+        $data = [
+            'quantity' => ''
+        ];
+
+        $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
+
+        $expected = [
+            'quantity' => [
+                '_empty' => 'This field cannot be left empty'
+            ]
+        ];
+
+        $this->assertEquals($expected, $listItem->getErrors());
+
+        // Natural Number
+        $listItem = $this->ListItems->get(1);
+        $data = [
+            'quantity' => 0
+        ];
+
+        $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
+
+        $expected = [
+            'quantity' => [
+                'naturalNumber' => 'The provided value is invalid'
+            ]
+        ];
+
+        $this->assertEquals($expected, $listItem->getErrors());
+
+        // Natural Number
+        $listItem = $this->ListItems->get(1);
+        $data = [
+            'quantity' => 1
+        ];
+
+        $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
+
+        $expected = [];
+
+        $this->assertEquals($expected, $listItem->getErrors());
+    }
+
+    /**
+     * @return void
+     */
+    public function testPatchEntityUpdate()
+    {
+        $listItem = $this->ListItems->get(1);
+        $data = [
+            'quantity' => 10
+        ];
+
+        $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
+
+        $this->assertEquals(10, $listItem->quantity);
+    }
+
+    /**
+     * @return void
+     */
+    public function testModifyQuantity()
     {
         $listItem = $this->ListItems->get(1);
 
         $this->assertEquals(1, $listItem->quantity);
 
-        $this->ListItems->updateQuantity($listItem, 1);
+        $this->ListItems->modifyQuantity($listItem, 1);
 
         $this->assertEquals(2, $listItem->quantity);
 
-        $this->ListItems->updateQuantity($listItem, -1);
+        $this->ListItems->modifyQuantity($listItem, -1);
 
         $this->assertEquals(1, $listItem->quantity);
 
-        $this->ListItems->updateQuantity($listItem, -1);
+        $this->ListItems->modifyQuantity($listItem, -1);
 
         $this->assertEquals(1, $listItem->quantity);
     }
@@ -112,14 +207,14 @@ class ListItemsTableTest extends TestCase
     {
         $listItem = $this->ListItems->get(1);
 
-        $this->assertFalse($listItem->is_completed);
+        $this->assertNull($listItem->completed);
 
         $this->ListItems->toggleCompleted($listItem);
 
-        $this->assertTrue($listItem->is_completed);
+        $this->assertNotNull($listItem->completed);
 
         $this->ListItems->toggleCompleted($listItem);
 
-        $this->assertFalse($listItem->is_completed);
+        $this->assertNull($listItem->completed);
     }
 }

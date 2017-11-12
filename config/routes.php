@@ -38,7 +38,8 @@ Router::scope('/', function (RouteBuilder $routes) {
                     'decreaseQuantity',
                     'delete',
                     'increaseQuantity',
-                    'toggleCompleted'
+                    'toggleCompleted',
+                    'updateQuantity'
                 ],
                 'map' => [
                     'decreaseQuantity' => [
@@ -55,7 +56,12 @@ Router::scope('/', function (RouteBuilder $routes) {
                         'action' => 'toggleCompleted',
                         'method' => 'PATCH',
                         'path' => '/:id/toggle-completed'
-                    ]
+                    ],
+                    'updateQuantity' => [
+                        'action' => 'updateQuantity',
+                        'method' => 'PATCH',
+                        'path' => '/:id/update-quantity'
+                    ],
                 ]
             ]);
         }

@@ -29,7 +29,7 @@ class ListItemsController extends AppController
     {
         $listItem = $this->ListItems->get($id);
 
-        $this->ListItems->updateQuantity($listItem, -1);
+        $this->ListItems->modifyQuantity($listItem, -1);
 
         $this->set('listItem', $listItem);
     }
@@ -55,7 +55,7 @@ class ListItemsController extends AppController
     {
         $listItem = $this->ListItems->get($id);
 
-        $this->ListItems->updateQuantity($listItem, 1);
+        $this->ListItems->modifyQuantity($listItem, 1);
 
         $this->set('listItem', $listItem);
     }
@@ -71,5 +71,25 @@ class ListItemsController extends AppController
         $this->ListItems->toggleCompleted($listItem);
 
         $this->set('listItem', $listItem);
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     */
+    public function updateQuantity($id)
+    {
+        $listItem = $this->ListItems->get($id);
+
+        $this->ListItems->patchEntityUpdateQuantity($listItem, $this->request->getData());
+
+        if (!$this->ListItems->save($listItem)) {
+            $this->response = $this->response->withStatus(400);
+        }
+
+        $this->set([
+            'listItem' => $listItem,
+            'errors' => $listItem->getErrors()
+        ]);
     }
 }

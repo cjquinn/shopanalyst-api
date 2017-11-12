@@ -42,9 +42,9 @@ class CreateListItems extends AbstractMigration
             'null' => false
         ]);
 
-        $table->addColumn('is_completed', 'boolean', [
-            'default' => false,
-            'null' => false
+        $table->addColumn('completed', 'datetime', [
+            'default' => null,
+            'null' => true
         ]);
 
         $table->addColumn('created', 'datetime', [

@@ -17,7 +17,7 @@ class ListItemsFixture extends TestFixture
                 'item_id' => 1,
                 'list_id' => 1,
                 'quantity' => 1,
-                'is_completed' => false,
+                'completed' => null,
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
             ],
@@ -26,7 +26,7 @@ class ListItemsFixture extends TestFixture
                 'item_id' => 2,
                 'list_id' => 2,
                 'quantity' => 1,
-                'is_completed' => false,
+                'completed' => null,
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
             ]

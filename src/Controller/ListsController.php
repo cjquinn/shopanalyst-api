@@ -67,10 +67,8 @@ class ListsController extends AppController
             $this->response = $this->response->withStatus(400);
         }
 
-        $this->Lists->loadInto($list, ['ListItems.Items']);
-
         $this->set([
-            'list' => $list,
+            'listItems' => $list->list_items,
             'errors' => $list->errors()
         ]);
     }

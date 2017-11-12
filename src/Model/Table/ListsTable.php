@@ -108,6 +108,11 @@ class ListsTable extends Table
                 ) {
                     return false;
                 }
+
+                $listItem->set([
+                    'quantity' => 1,
+                    'completed' => null
+                ], ['guard' => false]);
             }
         }
     }
