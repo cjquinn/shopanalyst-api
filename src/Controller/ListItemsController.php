@@ -25,37 +25,11 @@ class ListItemsController extends AppController
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
-    public function decreaseQuantity($id)
-    {
-        $listItem = $this->ListItems->get($id);
-
-        $this->ListItems->modifyQuantity($listItem, -1);
-
-        $this->set('listItem', $listItem);
-    }
-
-    /**
-     * @return void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
-     */
     public function delete($id)
     {
         $listItem = $this->ListItems->get($id);
 
         $this->ListItems->delete($listItem);
-
-        $this->set('listItem', $listItem);
-    }
-
-    /**
-     * @return void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
-     */
-    public function increaseQuantity($id)
-    {
-        $listItem = $this->ListItems->get($id);
-
-        $this->ListItems->modifyQuantity($listItem, 1);
 
         $this->set('listItem', $listItem);
     }
