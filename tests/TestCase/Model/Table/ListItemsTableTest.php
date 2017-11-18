@@ -17,7 +17,9 @@ class ListItemsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.list_items'
+        'app.items',
+        'app.list_items',
+        'app.lists'
     ];
 
     /**
@@ -176,28 +178,6 @@ class ListItemsTableTest extends TestCase
         $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
 
         $this->assertEquals(10, $listItem->quantity);
-    }
-
-    /**
-     * @return void
-     */
-    public function testModifyQuantity()
-    {
-        $listItem = $this->ListItems->get(1);
-
-        $this->assertEquals(1, $listItem->quantity);
-
-        $this->ListItems->modifyQuantity($listItem, 1);
-
-        $this->assertEquals(2, $listItem->quantity);
-
-        $this->ListItems->modifyQuantity($listItem, -1);
-
-        $this->assertEquals(1, $listItem->quantity);
-
-        $this->ListItems->modifyQuantity($listItem, -1);
-
-        $this->assertEquals(1, $listItem->quantity);
     }
 
     /**

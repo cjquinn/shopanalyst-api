@@ -42,6 +42,8 @@ class ListItemsTable extends Table
             'fieldList' => ['quantity'],
             'validate' => 'updateQuantity'
         ]);
+
+        $listItem->setDirty('modified', true);
     }
 
     /**
@@ -94,16 +96,6 @@ class ListItemsTable extends Table
     /**
      * @return void
      */
-    public function beforeSave(Event $event, ListItem $listItem)
-    {
-        if (!$listItem->isDirty('completed')) {
-            $listItem->setDirty('modified', true);
-        }
-    }
-
-    /**
-     * @return void
-     */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
         $query->order([
@@ -122,19 +114,6 @@ class ListItemsTable extends Table
             $listItem->completed
                 ? null
                 : Time::now()
-        );
-
-        $this->save($listItem);
-    }
-
-    /**
-     * @return void
-     */
-    public function modifyQuantity(ListItem $listItem, $difference)
-    {
-        $listItem->set(
-            'quantity',
-            max($listItem->quantity + $difference, 1)
         );
 
         $this->save($listItem);
