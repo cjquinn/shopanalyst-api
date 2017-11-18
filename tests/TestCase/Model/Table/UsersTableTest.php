@@ -67,6 +67,7 @@ class UsersTableTest extends TestCase
      */
     public function testPatchEntityEdit()
     {
+        // Required
         $user = $this->Users->get(1);
         $data = [];
 
@@ -75,10 +76,21 @@ class UsersTableTest extends TestCase
         $expected = [
             'email' => [
                 '_required' => 'This field is required'
-            ],
-            'current_password' => [
-                '_required' => 'This field is required'
-            ],
+            ]
+        ];
+
+        $this->assertEquals($expected, $user->errors());
+
+        // Missing new_password
+        $user = $this->Users->get(1);
+        $data = [
+            'email' => 'christy@myshopanalyst.com',
+            'current_password' => 'password'
+        ];
+
+        $this->Users->patchEntityEdit($user, $data);
+
+        $expected = [
             'new_password' => [
                 '_required' => 'This field is required'
             ]
@@ -86,6 +98,7 @@ class UsersTableTest extends TestCase
 
         $this->assertEquals($expected, $user->errors());
 
+        // Empty new password
         $user = $this->Users->get(1);
         $data = [
             'email' => 'christy@myshopanalyst.com',
@@ -103,6 +116,24 @@ class UsersTableTest extends TestCase
 
         $this->assertEquals($expected, $user->errors());
 
+        // Missing current_password
+        $user = $this->Users->get(1);
+        $data = [
+            'email' => 'christy@myshopanalyst.com',
+            'new_password' => 'newpassword'
+        ];
+
+        $this->Users->patchEntityEdit($user, $data);
+
+        $expected = [
+            'current_password' => [
+                '_required' => 'This field is required'
+            ]
+        ];
+
+        $this->assertEquals($expected, $user->errors());
+
+        // Empty current_password
         $user = $this->Users->get(1);
         $data = [
             'email' => 'christy@myshopanalyst.com',
@@ -120,11 +151,10 @@ class UsersTableTest extends TestCase
 
         $this->assertEquals($expected, $user->errors());
 
+        // Empty both passwords
         $user = $this->Users->get(1);
         $data = [
-            'email' => 'christy@myshopanalyst.com',
-            'current_password' => '',
-            'new_password' => ''
+            'email' => 'christy@myshopanalyst.com'
         ];
 
         $this->Users->patchEntityEdit($user, $data);

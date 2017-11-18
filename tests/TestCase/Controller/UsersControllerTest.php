@@ -76,9 +76,7 @@ class UsersControllerTest extends IntegrationTestCase
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
         $this->patch('/users/settings.json', [
-            'email' => 'christy@myshopanalyst.com',
-            'current_password' => '',
-            'new_password' => ''
+            'email' => 'christy@myshopanalyst.com'
         ]);
 
         $this->assertResponseCode(200);

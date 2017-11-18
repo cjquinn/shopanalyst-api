@@ -32,6 +32,60 @@ class UsersTable extends Table
     }
 
     /**
+     * @return \Cake\Validation\Validator
+     */
+    public function validationAdd(Validator $validator)
+    {
+        $validator
+            ->requirePresence('email')
+            ->notEmpty('email')
+            ->email('email');
+
+        $validator
+            ->requirePresence('password')
+            ->notEmpty('password');
+
+        return $validator;
+    }
+
+    /**
+     * @return \Cake\Validation\Validator
+     */
+    public function validationEdit(Validator $validator)
+    {
+        $validator
+            ->requirePresence('email')
+            ->notEmpty('email')
+            ->email('email');
+
+        $validator
+            ->requirePresence('current_password', function ($context) {
+                return isset($context['data']['new_password']);
+            })
+            ->notEmpty('current_password', 'You must enter your current password');
+
+        $validator
+            ->requirePresence('new_password', function ($context) {
+                return isset($context['data']['current_password']);
+            })
+            ->notEmpty('new_password', 'You must enter a new password');
+
+        return $validator;
+    }
+
+    /**
+     * @return \Cake\Validation\Validator
+     */
+    public function validationResetPassword(Validator $validator)
+    {
+        $validator
+            ->requirePresence('password')
+            ->notEmpty('password');
+
+        return $validator;
+    }
+
+    /**
      * @return \Cake\ORM\RulesChecker
      */
     public function buildRules(RulesChecker $rules)
@@ -108,60 +162,6 @@ class UsersTable extends Table
         if (!$user->errors()) {
             $this->patchEntityClearToken($user);
         }
-    }
-
-    /**
-     * @return \Cake\Validation\Validator
-     */
-    public function validationAdd(Validator $validator)
-    {
-        $validator
-            ->requirePresence('email')
-            ->notEmpty('email')
-            ->email('email');
-
-        $validator
-            ->requirePresence('password')
-            ->notEmpty('password');
-
-        return $validator;
-    }
-
-    /**
-     * @return \Cake\Validation\Validator
-     */
-    public function validationEdit(Validator $validator)
-    {
-        $validator
-            ->requirePresence('email')
-            ->notEmpty('email')
-            ->email('email');
-
-        $validator
-            ->requirePresence('current_password')
-            ->notEmpty('current_password', 'You must enter your current password', function ($context) {
-                return !empty($context['data']['new_password']);
-            });
-
-        $validator
-            ->requirePresence('new_password')
-            ->notEmpty('new_password', 'You must enter a new password', function ($context) {
-                return !empty($context['data']['current_password']);
-            });
-
-        return $validator;
-    }
-
-    /**
-     * @return \Cake\Validation\Validator
-     */
-    public function validationResetPassword(Validator $validator)
-    {
-        $validator
-            ->requirePresence('password')
-            ->notEmpty('password');
-
-        return $validator;
     }
 
     /**
