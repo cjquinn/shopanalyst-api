@@ -100,7 +100,8 @@ class ListItemsTable extends Table
     {
         $query->order([
             $this->aliasField('completed') => 'ASC',
-            $this->aliasField('modified') => 'DESC'
+            $this->aliasField('modified') => 'DESC',
+            $this->aliasField('id') => 'ASC'
         ]);
     }
 
