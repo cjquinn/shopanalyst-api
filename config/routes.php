@@ -64,11 +64,11 @@ Router::scope('/', function (RouteBuilder $routes) {
      * Users
      */
     $routes->resources('Users', [
-        'only' => ['account', 'create'],
+        'only' => ['create', 'settings'],
         'map' => [
-            'account' => [
-                'action' => 'account',
-                'method' => 'PUT'
+            'settings' => [
+                'action' => 'edit',
+                'method' => 'PATCH'
             ]
         ]
     ]);

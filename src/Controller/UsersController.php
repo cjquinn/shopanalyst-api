@@ -25,25 +25,6 @@ class UsersController extends AppController
     /**
      * @return void
      */
-    public function account()
-    {
-        $user = $this->Users->get($this->Auth->user('id'));
-
-        $this->Users->patchEntityEdit($user, $this->request->getData());
-
-        if (!$this->Users->save($user)) {
-            $this->response = $this->response->withStatus(400);
-        }
-
-        $this->set([
-            'user' => $user,
-            'errors' => $user->errors()
-        ]);
-    }
-
-    /**
-     * @return void
-     */
     public function add()
     {
         $user = $this->Users->newEntity();
@@ -70,6 +51,26 @@ class UsersController extends AppController
     public function currentUser()
     {
         $this->set('user', $this->Auth->user());
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     */
+    public function edit()
+    {
+        $user = $this->Users->get($this->Auth->user('id'));
+
+        $this->Users->patchEntityEdit($user, $this->request->getData());
+
+        if (!$this->Users->save($user)) {
+            $this->response = $this->response->withStatus(400);
+        }
+
+        $this->set([
+            'user' => $user,
+            'errors' => $user->errors()
+        ]);
     }
 
     /**

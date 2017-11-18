@@ -15,36 +15,8 @@ class UsersControllerTest extends IntegrationTestCase
     {
         $this->_testUnauthorised([
             'get' => '/auth/current-user.json',
-            'put' => '/users/account.json'
+            'patch' => '/users/settings.json'
         ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testAccountBadData()
-    {
-        $this->_setAuthSession(1);
-        $this->_setAjaxRequest();
-        $this->put('/users/account.json');
-
-        $this->assertResponseCode(400);
-    }
-
-    /**
-     * @return void
-     */
-    public function testAccountPut()
-    {
-        $this->_setAuthSession(1);
-        $this->_setAjaxRequest();
-        $this->put('/users/account.json', [
-            'email' => 'christy@myshopanalyst.com',
-            'current_password' => '',
-            'new_password' => ''
-        ]);
-
-        $this->assertResponseCode(200);
     }
 
     /**
@@ -80,6 +52,34 @@ class UsersControllerTest extends IntegrationTestCase
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
         $this->get('/auth/current-user.json');
+
+        $this->assertResponseCode(200);
+    }
+
+    /**
+     * @return void
+     */
+    public function testEditBadData()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->patch('/users/settings.json');
+
+        $this->assertResponseCode(400);
+    }
+
+    /**
+     * @return void
+     */
+    public function testEditPatch()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->patch('/users/settings.json', [
+            'email' => 'christy@myshopanalyst.com',
+            'current_password' => '',
+            'new_password' => ''
+        ]);
 
         $this->assertResponseCode(200);
     }
