@@ -25,6 +25,11 @@ Router::scope('/', function (RouteBuilder $routes) {
                     'action' => 'addItems',
                     'method' => 'PATCH',
                     'path' => '/:id/add-items'
+                ],
+                'duplicate' => [
+                    'action' => 'duplicate',
+                    'method' => 'POST',
+                    'path' => '/:id/duplicate'
                 ]
             ]
         ],

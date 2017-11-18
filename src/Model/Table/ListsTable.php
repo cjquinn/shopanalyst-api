@@ -34,6 +34,43 @@ class ListsTable extends Table
     }
 
     /**
+     * @return \Cake\Validation\Validator
+     */
+    public function validationAddListItems(Validator $validator)
+    {
+        $validator
+            ->requirePresence('list_items')
+            ->addNestedMany(
+                'list_items',
+                $this->ListItems->validator()
+            );
+
+        return $validator;
+    }
+
+    /**
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator
+            ->requirePresence('name')
+            ->notEmpty('name');
+
+        return $validator;
+    }
+
+    /**
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
+
+        return $rules;
+    }
+
+    /**
      * @return void
      */
     public function patchEntityAddListItems(ListEntity $list, array $data, $userId)
@@ -67,33 +104,6 @@ class ListsTable extends Table
     }
 
     /**
-     * @return \Cake\Validation\Validator
-     */
-    public function validationAddListItems(Validator $validator)
-    {
-        $validator
-            ->requirePresence('list_items')
-            ->addNestedMany(
-                'list_items',
-                $this->ListItems->validator()
-            );
-
-        return $validator;
-    }
-
-    /**
-     * @return \Cake\Validation\Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->requirePresence('name')
-            ->notEmpty('name');
-
-        return $validator;
-    }
-
-    /**
      * @return void|bool
      */
     public function beforeSave(Event $event, ListEntity $list, ArrayObject $options)
@@ -118,13 +128,43 @@ class ListsTable extends Table
     }
 
     /**
-     * @return \Cake\ORM\RulesChecker
+     * @return \App\Model\Entity\ListEntity
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
-    public function buildRules(RulesChecker $rules)
+    public function duplicate($id)
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $list = $this->get(1, [
+            'finder' => 'populated'
+        ]);
 
-        return $rules;
+        $list->setHidden([
+            'id',
+            'is_deleted',
+            'created',
+            'modified'
+        ]);
+
+        foreach ($list->list_items as $listItem) {
+            $listItem->setHidden([
+                'id',
+                'list_id',
+                'completed',
+                'created',
+                'modified'
+            ]);
+        }
+
+        $duplicateList = $this->newEntity($list->toArray(), [
+            'associated' => [
+                'ListItems' => [
+                    'fieldList' => ['item', 'item_id']
+                ]
+            ],
+            'fieldList' => ['user_id', 'name', 'list_items'],
+            'validate' => false
+        ]);
+
+        return $this->save($duplicateList);
     }
 
     /**

@@ -90,6 +90,17 @@ class ListsController extends AppController
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
+    public function duplicate($id)
+    {
+        $list = $this->Lists->duplicate($id);
+
+        $this->set('list', $list);
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
+     */
     public function edit($id)
     {
         $list = $this->Lists->get($id);

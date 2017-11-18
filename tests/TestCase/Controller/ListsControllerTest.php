@@ -17,6 +17,7 @@ class ListsControllerTest extends IntegrationTestCase
             'get' => '/lists.json',
             'post' => '/lists.json',
             'get' => '/lists/1.json',
+            'post' => '/lists/1/duplicate.json',
             'put' => '/lists/1.json',
             'delete' => '/lists/1.json',
             'patch' => '/lists/1/add-items.json'
@@ -29,6 +30,9 @@ class ListsControllerTest extends IntegrationTestCase
     public function testAuthorised()
     {
         $this->_testAuthorised([
+            // Not testing for this because it 404s
+            // 'get' => '/lists/2.json',
+            'post' => '/lists/2/duplicate.json',
             'put' => '/lists/2.json',
             'delete' => '/lists/2.json',
             'patch' => '/lists/2/add-items.json'
@@ -95,6 +99,18 @@ class ListsControllerTest extends IntegrationTestCase
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
         $this->delete('/lists/1.json');
+
+        $this->assertResponseCode(200);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDuplicatePost()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->post('/lists/1/duplicate.json');
 
         $this->assertResponseCode(200);
     }

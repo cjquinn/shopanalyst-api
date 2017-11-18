@@ -2,6 +2,7 @@
 
 namespace App\Test\TestCase\Model\Table;
 
+use Cake\Collection\Collection;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -132,5 +133,37 @@ class ListsTableTest extends TestCase
         $this->Lists->patchEntityAddListItems($list, $data, 1);
 
         $this->assertTrue($this->Lists->save($list) === false);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDuplicate()
+    {
+        $list = $this->Lists->get(1, [
+            'finder' => 'populated'
+        ]);
+        $duplicateList = $this->Lists->duplicate($list->id);
+
+        $this->assertEquals($list->user_id, $duplicateList->user_id);
+        $this->assertEquals($list->name, $duplicateList->name);
+
+        $listItemsCollection = new Collection($list->list_items);
+        $duplicateListItemsCollection = new Collection($duplicateList->list_items);
+
+        $this->assertEquals(
+            $listItemsCollection->extract('item_id')->toArray(),
+            $duplicateListItemsCollection->extract('item_id')->toArray()
+        );
+
+        $this->assertEquals(
+            $listItemsCollection->extract('quantity')->toArray(),
+            $duplicateListItemsCollection->extract('quantity')->toArray()
+        );
+
+        $this->assertEquals(
+            $listItemsCollection->extract('item.name')->toArray(),
+            $duplicateListItemsCollection->extract('item.name')->toArray()
+        );
     }
 }
