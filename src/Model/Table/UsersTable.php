@@ -10,7 +10,7 @@ use Cake\Auth\DefaultPasswordHasher;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Mailer\MailerAwareTrait;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Security;
@@ -179,18 +179,16 @@ class UsersTable extends Table
     /**
      * @param string|null $token
      * @return bool|\App\Model\Entity\User
-     * @throws \Cake\Datasource\Exception\ForbiddenException|
-     *         \Cake\Datasource\Exception\RecordNotFoundException
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
     public function getByToken($token)
     {
         $user = $this
             ->findByToken($token)
+            ->where([
+                'token_sent >=' => Time::createFromTimestamp(strtotime('1 hour ago'))
+            ])
             ->firstOrFail();
-
-        if (!$user->token_sent->wasWithinLast('1 Hour')) {
-            throw new ForbiddenException();
-        }
 
         return $user;
     }

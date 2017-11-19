@@ -155,7 +155,20 @@ class UsersControllerTest extends IntegrationTestCase
         $this->_setAjaxRequest();
         $this->get('/auth/reset-password.json?token=' . $token);
 
-        $this->assertResponseCode(403);
+        $this->assertResponseCode(404);
+    }
+
+    /**
+     * @return void
+     */
+    public function testResetPasswordGet()
+    {
+        $token = $this->_getToken();
+
+        $this->_setAjaxRequest();
+        $this->get('/auth/reset-password.json?token=' . $token);
+
+        $this->assertResponseCode(200);
     }
 
     /**

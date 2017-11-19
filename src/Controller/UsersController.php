@@ -109,6 +109,12 @@ class UsersController extends AppController
             ->first();
 
         if (!$user) {
+            $this->set('errors', [
+                'email' => [
+                    'invalid' => 'Invalid email, please try again'
+                ]
+            ]);
+
             $this->response = $this->response->withStatus(400);
         }
 
@@ -128,15 +134,17 @@ class UsersController extends AppController
     {
         $user = $this->Users->getByToken($this->request->getQuery('token'));
 
-        $this->Users->patchEntityResetPassword($user, $this->request->getData());
+        if ($this->request->is('patch')) {
+            $this->Users->patchEntityResetPassword($user, $this->request->getData());
 
-        if (!$this->Users->save($user)) {
-            $this->response = $this->response->withStatus(400);
+            if (!$this->Users->save($user)) {
+                $this->response = $this->response->withStatus(400);
+            }
+
+            $this->set([
+                'user' => $user,
+                'errors' => $user->errors()
+            ]);
         }
-
-        $this->set([
-            'user' => $user,
-            'errors' => $user->errors()
-        ]);
     }
 }
