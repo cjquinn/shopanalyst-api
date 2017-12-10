@@ -98,11 +98,7 @@ class ListItemsTable extends Table
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
-        $query->order([
-            $this->aliasField('completed') => 'ASC',
-            $this->aliasField('modified') => 'DESC',
-            $this->aliasField('id') => 'ASC'
-        ]);
+        $query->orderDesc($this->aliasField('created'));
     }
 
     /**
