@@ -36,6 +36,38 @@ class ListItemsTable extends Table
     /**
      * @return void
      */
+    public function patchEntityAdd(ListItem $listItem, array $data, $userId, $listId)
+    {
+        $this->patchEntity($listItem, $data, [
+            'associated' => [
+                'Items' => ['fieldList' => ['name']]
+            ],
+            'fieldList' => ['item', 'item_id'],
+            'validate' => 'add'
+        ]);
+
+        if ($listItem->getErrors()) {
+            return;
+        }
+
+        if ($listItem->item_id) {
+            if (!$this->Items->isOwnedBy($data['item_id'], $userId)) {
+                $listItem->setError('item_id', [
+                    'invalid' => 'The provided value is invalid'
+                ]);
+
+                return;
+            }
+        } elseif ($listItem->item) {
+            $listItem->item->set('user_id', $userId);
+        }
+
+        $listItem->set('list_id', $listId);
+    }
+
+    /**
+     * @return void
+     */
     public function patchEntityUpdateQuantity(ListItem $listItem, array $data)
     {
         $this->patchEntity($listItem, $data, [
@@ -49,7 +81,7 @@ class ListItemsTable extends Table
     /**
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationAdd(Validator $validator)
     {
         $validator
             ->requirePresence('item', function ($context) {

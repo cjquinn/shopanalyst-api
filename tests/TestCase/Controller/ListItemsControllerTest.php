@@ -14,6 +14,7 @@ class ListItemsControllerTest extends IntegrationTestCase
     public function testUnauthorised()
     {
         $this->_testUnauthorised([
+            'post' => '/lists/1/list-items.json',
             'delete' => '/lists/1/list-items/1.json',
             'patch' => '/lists/1/list-items/1/toggle-completed.json',
             'patch' => '/lists/1/list-items/1/update-quantity.json'
@@ -27,6 +28,7 @@ class ListItemsControllerTest extends IntegrationTestCase
     {
         $this->_testAuthorised([
             // Invalid owner
+            'post' => '/lists/2/list-items.json',
             'delete' => '/lists/2/list-items/2.json',
             'patch' => '/lists/2/list-items/2/toggle-completed.json',
             'patch' => '/lists/2/list-items/2/update-quantity.json',
@@ -35,6 +37,32 @@ class ListItemsControllerTest extends IntegrationTestCase
             'patch' => '/lists/1/list-items/2/toggle-completed.json',
             'patch' => '/lists/1/list-items/2/update-quantity.json'
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAddBadData()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->post('/lists/1/list-items.json');
+
+        $this->assertResponseCode(400);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAddPost()
+    {
+        $this->_setAuthSession(1);
+        $this->_setAjaxRequest();
+        $this->post('/lists/1/list-items.json', [
+            'item' => ['name' => 'Potatos']
+        ]);
+
+        $this->assertResponseCode(200);
     }
 
     /**

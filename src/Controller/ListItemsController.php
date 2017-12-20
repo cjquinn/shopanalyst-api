@@ -14,11 +14,36 @@ class ListItemsController extends AppController
             return false;
         }
 
-        if (!$this->ListItems->isOwnedBy($this->request->getParam('id'), $this->request->getParam('list_id'))) {
+        if ($this->request->getParam('id') &&
+            !$this->ListItems->isOwnedBy($this->request->getParam('id'), $this->request->getParam('list_id'))) {
             return false;
         }
 
         return parent::isAuthorized($user);
+    }
+
+    /**
+     * @return void
+     */
+    public function add()
+    {
+        $listItem = $this->ListItems->newEntity();
+
+        $this->ListItems->patchEntityAdd(
+            $listItem,
+            $this->request->getData(),
+            $this->Auth->user('id'),
+            $this->request->getParam('list_id')
+        );
+
+        if (!$this->ListItems->save($listItem)) {
+            $this->response = $this->response->withStatus(400);
+        }
+
+        $this->set([
+            'listItem' => $listItem,
+            'errors' => $listItem->getErrors()
+        ]);
     }
 
     /**

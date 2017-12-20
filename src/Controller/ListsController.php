@@ -53,30 +53,6 @@ class ListsController extends AppController
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      */
-    public function addItems($id)
-    {
-        $list = $this->Lists->get($id);
-
-        $this->Lists->patchEntityAddListItems(
-            $list,
-            $this->request->getData(),
-            $this->Auth->user('id')
-        );
-
-        if (!$this->Lists->save($list)) {
-            $this->response = $this->response->withStatus(400);
-        }
-
-        $this->set([
-            'listItems' => $list->list_items,
-            'errors' => $list->errors()
-        ]);
-    }
-
-    /**
-     * @return void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException
-     */
     public function delete($id)
     {
         $list = $this->Lists->get($id);

@@ -55,89 +55,6 @@ class ListsTableTest extends TestCase
     /**
      * @return void
      */
-    public function testPatchEntityAddListItems()
-    {
-        $list = $this->Lists->get(1);
-        $data = [];
-
-        $this->Lists->patchEntityAddListItems($list, $data, 1);
-
-        $expected = [
-            'list_items' => [
-                '_required' => 'This field is required'
-            ]
-        ];
-
-        $this->assertEquals($expected, $list->errors());
-
-        $list = $this->Lists->get(1);
-        $data = [
-            'list_items' => 'Some list items'
-        ];
-
-        $this->Lists->patchEntityAddListItems($list, $data, 1);
-
-        $expected = [
-            'list_items' => [
-                '_nested' => 'The provided value is invalid'
-            ]
-        ];
-
-        $this->assertEquals($expected, $list->errors());
-
-        $list = $this->Lists->get(1);
-        $data = [
-            'list_items' => [
-                ['item' => ['name' => 'Waffles']]
-            ]
-        ];
-
-        $this->Lists->patchEntityAddListItems($list, $data, 1);
-
-        $expected = [];
-
-        $this->assertEquals($expected, $list->errors());
-        $this->assertEquals(1, count($list->list_items));
-        $this->assertNotNull($list->list_items[0]->item);
-        $this->assertEquals(1, $list->list_items[0]->item->user_id);
-        $this->assertEquals('Waffles', $list->list_items[0]->item->name);
-
-        $list = $this->Lists->get(1);
-        $data = [
-            'list_items' => [
-                ['item_id' => 1]
-            ]
-        ];
-
-        $this->Lists->patchEntityAddListItems($list, $data, 1);
-
-        $expected = [];
-
-        $this->assertEquals($expected, $list->errors());
-        $this->assertEquals(1, count($list->list_items));
-        $this->assertEquals(1, $list->list_items[0]->item_id);
-    }
-
-    /**
-     * @return void
-     */
-    public function testBeforeSave()
-    {
-        $list = $this->Lists->get(1);
-        $data = [
-            'list_items' => [
-                ['item_id' => 2]
-            ]
-        ];
-
-        $this->Lists->patchEntityAddListItems($list, $data, 1);
-
-        $this->assertTrue($this->Lists->save($list) === false);
-    }
-
-    /**
-     * @return void
-     */
     public function testDuplicate()
     {
         $list = $this->Lists->get(1, [
@@ -154,16 +71,6 @@ class ListsTableTest extends TestCase
         $this->assertEquals(
             $listItemsCollection->extract('item_id')->toArray(),
             $duplicateListItemsCollection->extract('item_id')->toArray()
-        );
-
-        $this->assertEquals(
-            $listItemsCollection->extract('quantity')->toArray(),
-            $duplicateListItemsCollection->extract('quantity')->toArray()
-        );
-
-        $this->assertEquals(
-            $listItemsCollection->extract('item.name')->toArray(),
-            $duplicateListItemsCollection->extract('item.name')->toArray()
         );
     }
 }

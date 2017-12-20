@@ -19,8 +19,7 @@ class ListsControllerTest extends IntegrationTestCase
             'get' => '/lists/1.json',
             'post' => '/lists/1/duplicate.json',
             'put' => '/lists/1.json',
-            'delete' => '/lists/1.json',
-            'patch' => '/lists/1/add-items.json'
+            'delete' => '/lists/1.json'
         ]);
     }
 
@@ -34,8 +33,7 @@ class ListsControllerTest extends IntegrationTestCase
             // 'get' => '/lists/2.json',
             'post' => '/lists/2/duplicate.json',
             'put' => '/lists/2.json',
-            'delete' => '/lists/2.json',
-            'patch' => '/lists/2/add-items.json'
+            'delete' => '/lists/2.json'
         ]);
     }
 
@@ -59,34 +57,6 @@ class ListsControllerTest extends IntegrationTestCase
         $this->_setAuthSession(1);
         $this->_setAjaxRequest();
         $this->post('/lists.json', ['name' => 'Weekly shop']);
-
-        $this->assertResponseCode(200);
-    }
-
-    /**
-     * @return void
-     */
-    public function testAddItemsBadData()
-    {
-        $this->_setAuthSession(1);
-        $this->_setAjaxRequest();
-        $this->patch('/lists/1/add-items.json');
-
-        $this->assertResponseCode(400);
-    }
-
-    /**
-     * @return void
-     */
-    public function testAddItemsPatch()
-    {
-        $this->_setAuthSession(1);
-        $this->_setAjaxRequest();
-        $this->patch('/lists/1/add-items.json', [
-            'list_items' => [
-                ['item' => ['name' => 'Potatos']]
-            ]
-        ]);
 
         $this->assertResponseCode(200);
     }

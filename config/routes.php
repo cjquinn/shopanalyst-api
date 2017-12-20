@@ -21,11 +21,6 @@ Router::scope('/', function (RouteBuilder $routes) {
         'Lists',
         [
             'map' => [
-                'addItems' => [
-                    'action' => 'addItems',
-                    'method' => 'PATCH',
-                    'path' => '/:id/add-items'
-                ],
                 'duplicate' => [
                     'action' => 'duplicate',
                     'method' => 'POST',
@@ -40,6 +35,7 @@ Router::scope('/', function (RouteBuilder $routes) {
             $routes->resources('ListItems', [
                 'inflect' => 'dasherize',
                 'only' => [
+                    'create',
                     'delete',
                     'toggleCompleted',
                     'updateQuantity'

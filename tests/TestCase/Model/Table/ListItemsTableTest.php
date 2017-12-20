@@ -45,10 +45,13 @@ class ListItemsTableTest extends TestCase
     /**
      * @return void
      */
-    public function testValidationDefault()
+    public function testValidationAdd()
     {
         // Required
-        $errors = $this->ListItems->validator()->errors([]);
+        $listItem = $this->ListItems->newEntity();
+        $data = [];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
 
         $expected = [
             'item' => [
@@ -59,12 +62,13 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $errors);
+        $this->assertEquals($expected, $listItem->getErrors());
 
         // Empty
-        $errors = $this->ListItems->validator()->errors([
-            'item_id' => ''
-        ]);
+        $listItem = $this->ListItems->newEntity();
+        $data = ['item_id' => ''];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
 
         $expected = [
             'item_id' => [
@@ -72,12 +76,13 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $errors);
+        $this->assertEquals($expected, $listItem->getErrors());
 
         // Invalid
-        $errors = $this->ListItems->validator()->errors([
-            'item_id' => 'One'
-        ]);
+        $listItem = $this->ListItems->newEntity();
+        $data = ['item_id' => 'One'];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
 
         $expected = [
             'item_id' => [
@@ -85,12 +90,13 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $errors);
+        $this->assertEquals($expected, $listItem->getErrors());
 
         // Nested
-        $errors = $this->ListItems->validator()->errors([
-            'item' => 'An item'
-        ]);
+        $listItem = $this->ListItems->newEntity();
+        $data = ['item' => 'An item'];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
 
         $expected = [
             'item' => [
@@ -98,7 +104,48 @@ class ListItemsTableTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $errors);
+        $this->assertEquals($expected, $listItem->getErrors());
+
+        // Invalid item_id
+        $listItem = $this->ListItems->newEntity();
+        $data = ['item_id' => 2];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
+
+        $expected = [
+            'item_id' => [
+                'invalid' => 'The provided value is invalid'
+            ]
+        ];
+
+        $this->assertEquals($expected, $listItem->getErrors());
+    }
+
+    /**
+     * @return void
+     */
+    public function testPatchEntityAdd()
+    {
+        $listItem = $this->ListItems->newEntity();
+        $data = [
+            'item' => ['name' => 'Waffles']
+        ];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
+
+        $this->assertEmpty($listItem->getErrors());
+        $this->assertEquals(1, $listItem->list_id);
+        $this->assertNotNull($listItem->item);
+        $this->assertEquals(1, $listItem->item->user_id);
+        $this->assertEquals('Waffles', $listItem->item->name);
+
+        $listItem = $this->ListItems->newEntity();
+        $data = ['item_id' => 1];
+
+        $this->ListItems->patchEntityAdd($listItem, $data, 1, 1);
+
+        $this->assertEmpty($listItem->getErrors());
+        $this->assertEquals(1, $listItem->item_id);
     }
 
     /**
@@ -168,12 +215,10 @@ class ListItemsTableTest extends TestCase
     /**
      * @return void
      */
-    public function testPatchEntityUpdate()
+    public function testPatchEntityUpdateQuantity()
     {
         $listItem = $this->ListItems->get(1);
-        $data = [
-            'quantity' => 10
-        ];
+        $data = ['quantity' => 10];
 
         $this->ListItems->patchEntityUpdateQuantity($listItem, $data);
 
