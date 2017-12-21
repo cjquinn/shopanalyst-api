@@ -130,7 +130,10 @@ class ListItemsTable extends Table
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
-        $query->orderDesc($this->aliasField('created'));
+        $query->order([
+            $this->aliasField('id') => 'ASC',
+            $this->aliasField('created') => 'DESC'
+        ]);
     }
 
     /**
