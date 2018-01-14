@@ -4,7 +4,7 @@ namespace App\Controller;
 
 class ListsController extends AppController
 {
-    public $paginate = ['limit' => 5];
+    public $paginate = ['limit' => 10];
 
     public function initialize()
     {

@@ -61,7 +61,7 @@ class ListsTable extends Table
      */
     public function duplicate($id)
     {
-        $list = $this->get(1, [
+        $list = $this->get($id, [
             'finder' => 'populated'
         ]);
 
